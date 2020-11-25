@@ -1,0 +1,6 @@
+{
+  "login": "login",
+  "password": "password",
+  "DISABLE_MIC": true,
+  "DISABLE_CAM": true
+}
