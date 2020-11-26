@@ -66,6 +66,23 @@ def join(driver) -> None:
         driver.close()
 
 
+def meeting_loop(url, end_time) -> None:
+    """ Функция запуска браузера и ожидания конца встречи """
+
+    driver = wd.Chrome(options=options)
+    driver.get(url)
+    join(driver)
+
+    while True:
+        if end_time[0] == dt.now().hour and end_time[1] == dt.now().minute:
+            driver.close()
+            print("Встреча законилась.")
+
+            break
+
+        sleep(20)
+
+
 def main() -> None:
     """ Основная функция с планировщиком """
 
@@ -77,23 +94,12 @@ def main() -> None:
     while True:
         for item in schedule:
             if item['start'][0] == dt.now().isoweekday():
-                if item['start'][1] == dt.now().hour and item['start'][2] == dt.now().minute and dt.now().second == 0:
-                    url = item['url']
-                    end_time = item['end']
-
-                    sleep(1)
-
+                if item['start'][1] == dt.now().hour and item['start'][2] == dt.now().minute:
                     print("Выполняется вход...")
 
-                    driver = wd.Chrome(options=options)
-                    driver.get(url)
-                    join(driver)
+                    meeting_loop(url=item['url'], end_time=item['end'])
 
-                    while True:
-                        if end_time[0] == dt.now().hour and end_time[1] == dt.now().minute and dt.now().second == 0:
-                            driver.close()
-                            print("Встреча законилась.")
-                            break
+        sleep(20)
 
 
 if __name__ == '__main__':
